@@ -74,27 +74,25 @@ app.post("/api/register", async (req, res) => {
 
 // Login endpoint
 app.post("/api/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  if (!email || !password) {
+  const { email, computedAuthHash } = req.body;
+  console.log(`email :${email}`);
+  console.log(`hash : ${computedAuthHash}`);
+  
+  if (!email || !computedAuthHash) {
     return res.status(400).json({ message: "Email and password are required." });
   }
 
   try {
     // Fetch the stored salt and authHash for the given email
-    const user = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+    const user = await pool.query("SELECT auth_hash FROM users WHERE email = $1", [email]);
 
     if (user.rows.length === 0) {
       return res.status(400).json({ message: "User not found." });
     }
 
-    const { salt, auth_hash } = user.rows[0];
+    const { auth_hash } = user.rows[0];
 
-    // Derive key using the stored salt
-    const key = await deriveKey(password, salt);
-
-    // Recompute the authHash
-    const computedAuthHash = HMAC(key, "authentication");
+    
 
     // Check if the computed authHash matches the stored authHash
     if (computedAuthHash !== auth_hash) {
@@ -114,6 +112,35 @@ app.post("/api/login", async (req, res) => {
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).json({ message: "Server error." });
+  }
+});
+
+app.post("/api/get-salt",async (req, res) => {
+  const { email } = req.body;
+
+  // Input validation
+  if (!email) {
+    return res.status(400).json({ message: "Email is required." });
+  }
+
+  try {
+    // Query to fetch the salt for the given email
+    const query = "SELECT salt FROM users WHERE email = $1";
+    const result = await pool.query(query, [email]);
+
+    // Check if the email exists in the database
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Email not found." });
+    }
+
+    // Retrieve the salt
+    const salt = result.rows[0].salt;
+
+    // Respond with the salt
+    return res.status(200).json({ salt });
+  } catch (error) {
+    console.error("Error fetching salt:", error);
+    return res.status(500).json({ message: "Internal server error." });
   }
 });
 
