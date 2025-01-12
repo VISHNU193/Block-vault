@@ -1,0 +1,36 @@
+# Node.js dependencies
+node_modules/
+
+# Express logs
+logs/
+
+# Environment variables
+.env
+
+# IDE and editor files
+.vscode/
+.idea/
+.editorconfig
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build and dist files
+/dist/
+/build/
+
+# Package lock files
+package-lock.json
+yarn.lock
+
+# TypeScript files (if applicable)
+*.ts
+*.d.ts
+
+# Coverage reports
+coverage/
+
+# Temp files
+tmp/
+temp/
