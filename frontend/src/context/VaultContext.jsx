@@ -22,7 +22,7 @@ export const VaultProvider = ({ children }) => {
   };
 
   return (
-    <VaultContext.Provider value={{ items, addItem, deleteItem, editItem }}>
+    <VaultContext.Provider value={{ items, setItems, addItem, deleteItem, editItem }}>
       {children}
     </VaultContext.Provider>
   );
