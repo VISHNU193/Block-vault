@@ -1,9 +1,4 @@
 
-
-
-
-
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom"; // useNavigate for redirecting
 import axios from "axios";

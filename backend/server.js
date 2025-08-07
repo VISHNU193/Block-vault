@@ -6,7 +6,7 @@ import argon2 from "argon2";
 import crypto from "crypto";
 import pkg from 'pg';
 const { Pool } = pkg;
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import { PinataSDK } from "pinata-web3";
 
 
@@ -106,6 +106,7 @@ app.post("/api/login", async (req, res) => {
   const { email, computedAuthHash } = req.body;
   console.log(`email :${email}`);
   console.log(`hash : ${computedAuthHash}`);
+  console.log("in login");
   
   if (!email || !computedAuthHash) {
     return res.status(400).json({ message: "Email and password are required." });
